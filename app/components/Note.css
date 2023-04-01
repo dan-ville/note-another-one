@@ -1,0 +1,40 @@
+dialog {
+  margin: auto;
+  min-width: 550px;
+  background-color: hsl(0, 0%, 15%);
+  outline: none;
+  border: 1px solid hsl(0, 0%, 65%);
+  padding: 0.8rem;
+  border-radius: 0.5em;
+}
+
+dialog input,
+dialog textarea {
+  padding: 0.3rem 0.6rem;
+  color: hsl(0, 0%, 80%);
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  border: none;
+  background-color: transparent;
+}
+
+dialog input {
+  font-size: 1.5rem;
+}
+dialog button {
+  padding: 0.3em 0.6em;
+}
+
+.note-container {
+  border: 1px solid hsl(0, 0%, 65%);
+  padding: 0.8rem;
+  border-radius: 0.5em;
+  background-color: transparent;
+  color: hsl(0, 0%, 80%);
+  text-align: left;
+}
+
+.note-container h3 {
+  margin-bottom: 12px;
+}
