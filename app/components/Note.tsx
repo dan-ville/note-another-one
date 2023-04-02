@@ -1,31 +1,69 @@
 "use client"
-import React, { useRef, useState } from "react"
-import { Note } from "../types"
+import React, { ChangeEvent, MutableRefObject, useRef, useState } from "react"
+import { Note as NoteInterface } from "../types"
 import "./Note.css"
 
 interface Props {
-  note: Note
+  note: NoteInterface
+  updateNote: (id: string) => (note: Partial<NoteInterface>) => void
 }
 
-const Note = ({ note: { title, content } }: Props) => {
-  const modalRef = useRef<HTMLDialogElement>(null)
-
-  const NoteModal = () => (
-    <dialog ref={modalRef}>
-      <form method="dialog" className="">
-        <input type="text" placeholder={title} />
-        <textarea rows={5} defaultValue={content} />
-        <button onClick={() => closeModal()}>Save</button>
-      </form>
-    </dialog>
-  )
-
-  function openModal() {
-    modalRef?.current?.showModal()
+interface ModalProps {
+  isOpen: boolean
+  modalRef: React.RefObject<HTMLDialogElement>
+  formValues: {
+    title?: string
+    content?: string
+  }
+  closeModal: (note: NoteInterface) => void
+}
+const NoteModal = ({
+  isOpen,
+  formValues,
+  modalRef,
+  closeModal,
+}: ModalProps) => {
+  const [form, setForm] = useState(formValues)
+  const onInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm({ ...form, [event.target.name]: event.target.value })
   }
 
-  function closeModal() {
-    modalRef?.current?.close()
+  return (
+    <dialog open={isOpen} ref={modalRef}>
+      <input
+        type="text"
+        placeholder={form.title}
+        name="title"
+        value={form.title}
+        onChange={onInputChange}
+      />
+      <textarea
+        rows={5}
+        defaultValue={form.content}
+        name="content"
+        value={form.content}
+        onChange={onInputChange}
+      />
+      <button onClick={() => closeModal(form)}>Save</button>
+    </dialog>
+  )
+}
+
+const Note = ({ note: { title, content, id }, updateNote }: Props) => {
+  const modalRef = useRef<HTMLDialogElement>(null)
+  const [isOpen, setIsOpen] = useState(false)
+
+  function openModal() {
+    // modalRef?.current?.showModal()
+    setIsOpen(true)
+  }
+
+  function closeModal(note: NoteInterface) {
+    updateNote(id!.toString())(note)
+    // modalRef?.current?.close()
+    setIsOpen(false)
   }
 
   return (
@@ -36,7 +74,12 @@ const Note = ({ note: { title, content } }: Props) => {
           <p>{content}</p>
         </div>
       </button>
-      <NoteModal />
+      <NoteModal
+        formValues={{ title, content }}
+        isOpen={isOpen}
+        closeModal={closeModal}
+        modalRef={modalRef}
+      />
     </>
   )
 }
