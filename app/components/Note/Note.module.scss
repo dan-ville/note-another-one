@@ -1,4 +1,4 @@
-dialog {
+.dialog {
   margin: auto;
   min-width: 550px;
   background-color: hsl(0, 0%, 15%);
@@ -8,8 +8,7 @@ dialog {
   border-radius: 0.5em;
 }
 
-dialog input,
-dialog textarea {
+.title-input, .content-input {
   padding: 0.3rem 0.6rem;
   color: hsl(0, 0%, 80%);
   display: block;
@@ -19,10 +18,11 @@ dialog textarea {
   background-color: transparent;
 }
 
-dialog input {
+.title-input {
   font-size: 1.5rem;
 }
-dialog button {
+
+.content-input {
   padding: 0.3em 0.6em;
 }
 

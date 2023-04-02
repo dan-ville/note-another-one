@@ -1,5 +1,4 @@
-import "./style.css"
-import { Inter } from "next/font/google"
+import "./style.scss"
 
 export const metadata = {
   title: "Create Next App",

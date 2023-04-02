@@ -1,7 +1,7 @@
 "use client"
-import React, { ChangeEvent, MutableRefObject, useRef, useState } from "react"
-import { Note as NoteInterface } from "../types"
-import "./Note.css"
+import React, { useRef, useState } from "react"
+import { Note as NoteInterface } from "../../types"
+import "./Note.module.scss"
 
 interface Props {
   note: NoteInterface
@@ -31,13 +31,14 @@ const NoteModal = ({
   }
 
   return (
-    <dialog open={isOpen} ref={modalRef}>
+    <dialog open={isOpen} ref={modalRef} className="dialog">
       <input
         type="text"
         placeholder={form.title}
         name="title"
         value={form.title}
         onChange={onInputChange}
+        className="title-input"
       />
       <textarea
         rows={5}
@@ -45,6 +46,7 @@ const NoteModal = ({
         name="content"
         value={form.content}
         onChange={onInputChange}
+        className='content-input'
       />
       <button onClick={() => closeModal(form)}>Save</button>
     </dialog>
