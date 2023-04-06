@@ -1,7 +1,7 @@
 "use client"
 import React, { useRef, useState } from "react"
 import { Note as NoteInterface } from "../../types"
-import "./Note.module.scss"
+import "./Note.scss"
 
 interface Props {
   note: NoteInterface
@@ -46,7 +46,7 @@ const NoteModal = ({
         name="content"
         value={form.content}
         onChange={onInputChange}
-        className='content-input'
+        className="content-input"
       />
       <button onClick={() => closeModal(form)}>Save</button>
     </dialog>

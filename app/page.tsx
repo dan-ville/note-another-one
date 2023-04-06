@@ -3,15 +3,23 @@ import { useState } from "react"
 import { Note as NoteInterface } from "./types"
 import { NewNote, Note } from "./components"
 import "./style.scss"
+import { useRegisterNotes } from "./hooks/useRegisterNotes"
 
 const formInitialValues = {
   title: "",
   content: "",
 }
 
+const storedNotes = localStorage.getItem("notes")
+
 export default function Home() {
-  const [notes, setNotes] = useState<NoteInterface[]>([])
+  const [notes, setNotes] = useState<NoteInterface[]>(
+    storedNotes ? JSON.parse(storedNotes) : []
+  )
   const [form, setForm] = useState(formInitialValues)
+
+  useRegisterNotes(notes)
+
   const onInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -32,12 +40,12 @@ export default function Home() {
 
   return (
     <main>
+      <NewNote
+        values={form}
+        createNote={createNote}
+        onInputChange={onInputChange}
+      />
       <div className="notes-grid">
-        <NewNote
-          values={form}
-          createNote={createNote}
-          onInputChange={onInputChange}
-        />
         {notes.map((note, key) => (
           <Note key={key} note={note} updateNote={updateNote} />
         ))}
