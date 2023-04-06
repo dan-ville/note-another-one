@@ -1,0 +1,39 @@
+.note-container {
+  border: 1px solid hsl(0, 0%, 65%);
+  padding: 0.8rem;
+  border-radius: 0.5em;
+  background-color: transparent;
+  color: hsl(0, 0%, 80%);
+  text-align: left;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  margin-bottom: 24px;
+  box-shadow: 0px 0px 10px hsl(0, 0%, 7%);
+
+  input.note-title,
+  textarea.note-content {
+    display: block;
+    width: 100%;
+
+    padding: 0.3rem 0.6rem;
+    color: hsl(0, 0%, 80%);
+
+    margin-bottom: 12px;
+    border: none;
+    background-color: transparent;
+  }
+  .note-title:focus, .note-content:focus {
+    outline: none;
+  }
+
+  .note-footer {
+    display: flex;
+    margin-top: 12px;
+
+    .save-button {
+      padding: 0.3em 0.6em;
+      margin-left: auto;
+    }
+  }
+}

@@ -42,7 +42,6 @@ const NoteModal = ({
       />
       <textarea
         rows={5}
-        defaultValue={form.content}
         name="content"
         value={form.content}
         onChange={onInputChange}
