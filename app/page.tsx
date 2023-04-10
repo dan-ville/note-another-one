@@ -11,11 +11,15 @@ const formInitialValues = {
 }
 
 export default function Home() {
-  const [notes, setNotes] = useState<NoteInterface[]>(
-    localStorage.getItem("notes")
-      ? JSON.parse(localStorage.getItem("notes")!)
-      : []
-  )
+  const [notes, setNotes] = useState<NoteInterface[]>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("notes")
+        ? JSON.parse(localStorage.getItem("notes")!)
+        : []
+    }
+    return []
+  })
+  console.log(notes)
   const [form, setForm] = useState(formInitialValues)
 
   useRegisterNotes(notes)
@@ -26,14 +30,18 @@ export default function Home() {
     setForm({ ...form, [event.target.name]: event.target.value })
   }
 
-  const updateNote = (id: string) => (note: Partial<NoteInterface>) => {
+  const updateNote = (id: string) => (note: NoteInterface) => {
+    console.log('tf bro')
     const target = notes.find((note) => note.id == id)
     const updated = { ...target, ...note }
-    setNotes(() => notes.map((x) => (x.id == id ? updated : x)))
+    setNotes(() => notes.map((x) => (x.id === id ? updated : x)))
   }
 
   const createNote = () => {
-    const newNote = { ...form, id: (Math.random() * 10000).toString() }
+    const newNote = {
+      ...form,
+      id: Math.floor(Math.random() * 10000).toString(),
+    }
     setNotes((prev) => [...prev, newNote])
     setForm(formInitialValues)
   }
@@ -46,8 +54,12 @@ export default function Home() {
         onInputChange={onInputChange}
       />
       <div className="notes-grid">
-        {notes.map((note, key) => (
-          <Note key={key} note={note} updateNote={updateNote} />
+        {notes.map((note) => (
+          <Note
+            key={note.id}
+            note={note}
+            updateNote={(updatedNote) => updateNote(note.id)(updatedNote)}
+          />
         ))}
       </div>
     </main>

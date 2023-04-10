@@ -1,81 +1,76 @@
 "use client"
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Note as NoteInterface } from "../../types"
 import styles from "./Note.module.scss"
 
 interface Props {
   note: NoteInterface
-  updateNote: (id: string) => (note: Partial<NoteInterface>) => void
+  updateNote: (updatedNote: NoteInterface) => void
 }
 
-interface ModalProps {
-  modalRef: React.RefObject<HTMLDialogElement>
-  formValues: {
-    title?: string
-    content?: string
-  }
-  closeModal: (note: NoteInterface) => void
-}
-const NoteModal = ({
-  formValues,
-  modalRef,
-  closeModal,
-}: ModalProps) => {
-  const [form, setForm] = useState(formValues)
-  const onInputChange = (
+const NoteModal: React.FC<Props> = ({ note, updateNote }) => {
+  const [updatedNote, setUpdatedNote] = useState<NoteInterface>(note)
+
+  useEffect(() => {
+    setUpdatedNote(note)
+  }, [note])
+
+  const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setForm({ ...form, [event.target.name]: event.target.value })
+    setUpdatedNote({
+      ...updatedNote,
+      [event.target.name]: event.target.value,
+    })
+  }
+
+  const handleSubmit = () => {
+    updateNote(updatedNote)
   }
 
   return (
-    <dialog ref={modalRef} className={styles["dialog"]}>
+    <div className={styles["dialog"]}>
       <input
         type="text"
-        placeholder={form.title}
         name="title"
-        value={form.title}
-        onChange={onInputChange}
         className={styles["title-input"]}
+        value={updatedNote.title}
+        onChange={handleInputChange}
       />
       <textarea
-        rows={5}
         name="content"
-        value={form.content}
-        onChange={onInputChange}
-        className={styles["content-input"]}
+        className={styles['content-input']}
+        value={updatedNote.content}
+        onChange={handleInputChange}
       />
-      <button onClick={() => closeModal(form)}>Save</button>
-    </dialog>
+      <button onClick={handleSubmit}>Save</button>
+    </div>
   )
 }
 
-const Note = ({ note: { title, content, id }, updateNote }: Props) => {
-  const modalRef = useRef<HTMLDialogElement>(null)
+const Note: React.FC<Props> = ({ note, updateNote }) => {
+  const [showModal, setShowModal] = useState(false)
 
-  function openModal() {
-    modalRef?.current?.showModal()
-  }
-
-  function closeModal(note: NoteInterface) {
-    updateNote(id!.toString())(note)
-    modalRef?.current?.close()
+  const handleClick = () => {
+    setShowModal(!showModal)
   }
 
   return (
-    <>
-      <button onClick={() => openModal()} className={styles["note-container"]}>
-        <div>
-          <h3>{title}</h3>
-          <p>{content}</p>
-        </div>
-      </button>
-      <NoteModal
-        formValues={{ title, content }}
-        closeModal={closeModal}
-        modalRef={modalRef}
-      />
-    </>
+    <div className={styles["note-container"]}>
+      <div onClick={handleClick}>
+        <h3 className={styles["title-input"]}>{note.title}</h3>
+        <p className={styles["content-input"]}>{note.content}</p>
+      </div>
+      {showModal && (
+        <NoteModal
+          note={note}
+          updateNote={(updatedNote) => {
+            updateNote(updatedNote)
+            setShowModal(false)
+          }}
+        />
+      )}
+    </div>
   )
 }
 
