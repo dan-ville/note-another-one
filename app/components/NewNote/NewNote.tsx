@@ -1,6 +1,6 @@
 "use client"
 import React from "react"
-import "./NewNote.scss"
+import styles from "./NewNote.module.scss"
 
 interface Props {
   values: {
@@ -19,9 +19,9 @@ const NewNote = ({
   createNote,
 }: Props) => {
   return (
-    <div className="note-container">
+    <div className={styles["note-container"]}>
       <input
-        className="note-title"
+        className={styles["note-title"]}
         type="text"
         placeholder={title || `Title`}
         name="title"
@@ -29,14 +29,14 @@ const NewNote = ({
         onChange={onInputChange}
       />
       <textarea
-        className="note-content"
+        className={styles["note-content"]}
         rows={5}
         name="content"
         value={content}
         onChange={onInputChange}
         placeholder="Note..."
       />
-      <div className="note-footer">
+      <div className={styles["note-footer"]}>
         <button onClick={() => createNote()} className="save-button">
           Save
         </button>

@@ -1,7 +1,7 @@
 "use client"
 import React, { useRef, useState } from "react"
 import { Note as NoteInterface } from "../../types"
-import "./Note.scss"
+import styles from "./Note.module.scss"
 
 interface Props {
   note: NoteInterface
@@ -9,7 +9,6 @@ interface Props {
 }
 
 interface ModalProps {
-  isOpen: boolean
   modalRef: React.RefObject<HTMLDialogElement>
   formValues: {
     title?: string
@@ -18,7 +17,6 @@ interface ModalProps {
   closeModal: (note: NoteInterface) => void
 }
 const NoteModal = ({
-  isOpen,
   formValues,
   modalRef,
   closeModal,
@@ -31,21 +29,21 @@ const NoteModal = ({
   }
 
   return (
-    <dialog open={isOpen} ref={modalRef} className="dialog">
+    <dialog ref={modalRef} className={styles["dialog"]}>
       <input
         type="text"
         placeholder={form.title}
         name="title"
         value={form.title}
         onChange={onInputChange}
-        className="title-input"
+        className={styles["title-input"]}
       />
       <textarea
         rows={5}
         name="content"
         value={form.content}
         onChange={onInputChange}
-        className="content-input"
+        className={styles["content-input"]}
       />
       <button onClick={() => closeModal(form)}>Save</button>
     </dialog>
@@ -54,22 +52,19 @@ const NoteModal = ({
 
 const Note = ({ note: { title, content, id }, updateNote }: Props) => {
   const modalRef = useRef<HTMLDialogElement>(null)
-  const [isOpen, setIsOpen] = useState(false)
 
   function openModal() {
-    // modalRef?.current?.showModal()
-    setIsOpen(true)
+    modalRef?.current?.showModal()
   }
 
   function closeModal(note: NoteInterface) {
     updateNote(id!.toString())(note)
-    // modalRef?.current?.close()
-    setIsOpen(false)
+    modalRef?.current?.close()
   }
 
   return (
     <>
-      <button onClick={() => openModal()} className="note-container">
+      <button onClick={() => openModal()} className={styles["note-container"]}>
         <div>
           <h3>{title}</h3>
           <p>{content}</p>
@@ -77,7 +72,6 @@ const Note = ({ note: { title, content, id }, updateNote }: Props) => {
       </button>
       <NoteModal
         formValues={{ title, content }}
-        isOpen={isOpen}
         closeModal={closeModal}
         modalRef={modalRef}
       />

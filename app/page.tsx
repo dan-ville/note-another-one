@@ -10,11 +10,11 @@ const formInitialValues = {
   content: "",
 }
 
-const storedNotes = localStorage.getItem("notes")
-
 export default function Home() {
   const [notes, setNotes] = useState<NoteInterface[]>(
-    storedNotes ? JSON.parse(storedNotes) : []
+    localStorage.getItem("notes")
+      ? JSON.parse(localStorage.getItem("notes")!)
+      : []
   )
   const [form, setForm] = useState(formInitialValues)
 
