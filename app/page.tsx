@@ -19,7 +19,7 @@ export default function Home() {
     }
     return []
   })
-  console.log(notes)
+
   const [form, setForm] = useState(formInitialValues)
 
   useRegisterNotes(notes)
@@ -31,7 +31,6 @@ export default function Home() {
   }
 
   const updateNote = (id: string) => (note: NoteInterface) => {
-    console.log('tf bro')
     const target = notes.find((note) => note.id == id)
     const updated = { ...target, ...note }
     setNotes(() => notes.map((x) => (x.id === id ? updated : x)))

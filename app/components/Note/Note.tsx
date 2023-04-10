@@ -2,14 +2,21 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Note as NoteInterface } from "../../types"
 import styles from "./Note.module.scss"
+import { useOnClickOutside } from "@/app/hooks/useOnClickOutside"
 
 interface NoteModalProps {
   note: NoteInterface
   updateNote: (updatedNote: NoteInterface) => void
   noteRef: React.RefObject<HTMLDivElement>
+  modalRef: React.RefObject<HTMLDivElement>
 }
 
-const NoteModal: React.FC<NoteModalProps> = ({ note, updateNote, noteRef }) => {
+const NoteModal: React.FC<NoteModalProps> = ({
+  note,
+  updateNote,
+  noteRef,
+  modalRef,
+}) => {
   const [updatedNote, setUpdatedNote] = useState<NoteInterface>(note)
 
   useEffect(() => {
@@ -34,21 +41,23 @@ const NoteModal: React.FC<NoteModalProps> = ({ note, updateNote, noteRef }) => {
   }
 
   return (
-    <div className={styles["dialog"]}>
-      <input
-        type="text"
-        name="title"
-        className={styles["title-input"]}
-        value={updatedNote.title}
-        onChange={handleInputChange}
-      />
-      <textarea
-        name="content"
-        className={styles["content-input"]}
-        value={updatedNote.content}
-        onChange={handleInputChange}
-      />
-      <button onClick={handleSubmit}>Save</button>
+    <div className={styles["dialog-backdrop"]}>
+      <div className={styles["dialog"]} ref={modalRef}>
+        <input
+          type="text"
+          name="title"
+          className={styles["title-input"]}
+          value={updatedNote.title}
+          onChange={handleInputChange}
+        />
+        <textarea
+          name="content"
+          className={styles["content-input"]}
+          value={updatedNote.content}
+          onChange={handleInputChange}
+        />
+        <button onClick={handleSubmit}>Save</button>
+      </div>
     </div>
   )
 }
@@ -61,9 +70,14 @@ interface NoteProps {
 const Note: React.FC<NoteProps> = ({ note, updateNote }) => {
   const [showModal, setShowModal] = useState(false)
   const noteRef = useRef<HTMLDivElement>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
 
   const handleClick = () => {
     setShowModal(!showModal)
+  }
+
+  const closeModal = () => {
+    setShowModal(false)
   }
 
   // callback for the event listener making the note divs keyboard focusable
@@ -79,6 +93,8 @@ const Note: React.FC<NoteProps> = ({ note, updateNote }) => {
       noteRef.current.focus()
     }
   }, [showModal])
+
+  useOnClickOutside(modalRef, closeModal)
 
   return (
     <div>
@@ -98,6 +114,7 @@ const Note: React.FC<NoteProps> = ({ note, updateNote }) => {
         <NoteModal
           note={note}
           noteRef={noteRef}
+          modalRef={modalRef}
           updateNote={(updatedNote) => {
             updateNote(updatedNote)
             setShowModal(false)
