@@ -37,9 +37,11 @@ export default function Home() {
   }
 
   const createNote = () => {
+    const date = new Date()
     const newNote = {
       ...form,
       id: Math.floor(Math.random() * 10000).toString(),
+      timeCreated: date.getTime(),
     }
     setNotes((prev) => [...prev, newNote])
     setForm(formInitialValues)
@@ -53,13 +55,15 @@ export default function Home() {
         onInputChange={onInputChange}
       />
       <div className="notes-grid">
-        {notes.map((note) => (
-          <Note
-            key={note.id}
-            note={note}
-            updateNote={(updatedNote) => updateNote(note.id)(updatedNote)}
-          />
-        ))}
+        {notes
+          .sort((a, b) => b.timeCreated - a.timeCreated)
+          .map((note) => (
+            <Note
+              key={note.id}
+              note={note}
+              updateNote={(updatedNote) => updateNote(note.id)(updatedNote)}
+            />
+          ))}
       </div>
     </main>
   )
