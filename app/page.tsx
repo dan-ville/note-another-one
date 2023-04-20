@@ -4,6 +4,7 @@ import { Note as NoteInterface } from "./types"
 import { NewNote, Note } from "./components"
 import "./style.scss"
 import { useRegisterNotes } from "./hooks/useRegisterNotes"
+import { v4 as uuid } from "uuid"
 
 const formInitialValues = {
   title: "",
@@ -40,7 +41,7 @@ export default function Home() {
     const date = new Date()
     const newNote = {
       ...form,
-      id: Math.floor(Math.random() * 10000).toString(),
+      id: uuid(),
       timeCreated: date.getTime(),
     }
     setNotes((prev) => [...prev, newNote])
