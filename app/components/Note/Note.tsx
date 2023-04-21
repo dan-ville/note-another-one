@@ -9,6 +9,7 @@ interface NoteModalProps {
   updateNote: (updatedNote: NoteInterface) => void
   noteRef: React.RefObject<HTMLDivElement>
   modalRef: React.RefObject<HTMLDivElement>
+  deleteNote: (id: NoteInterface["id"]) => void
 }
 
 const NoteModal: React.FC<NoteModalProps> = ({
@@ -16,6 +17,7 @@ const NoteModal: React.FC<NoteModalProps> = ({
   updateNote,
   noteRef,
   modalRef,
+  deleteNote,
 }) => {
   const [updatedNote, setUpdatedNote] = useState<NoteInterface>(note)
 
@@ -56,7 +58,10 @@ const NoteModal: React.FC<NoteModalProps> = ({
           value={updatedNote.content}
           onChange={handleInputChange}
         />
-        <button onClick={handleSubmit}>Save</button>
+        <div className={styles["actions-container"]}>
+          <button onClick={() => deleteNote(note.id)}>Delete</button>
+          <button onClick={handleSubmit}>Save</button>
+        </div>
       </div>
     </div>
   )
@@ -65,9 +70,10 @@ const NoteModal: React.FC<NoteModalProps> = ({
 interface NoteProps {
   note: NoteInterface
   updateNote: (updatedNote: NoteInterface) => void
+  deleteNote: (id: NoteInterface["id"]) => void
 }
 
-const Note: React.FC<NoteProps> = ({ note, updateNote }) => {
+const Note: React.FC<NoteProps> = ({ note, updateNote, deleteNote }) => {
   const [showModal, setShowModal] = useState(false)
   const noteRef = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -119,6 +125,7 @@ const Note: React.FC<NoteProps> = ({ note, updateNote }) => {
             updateNote(updatedNote)
             setShowModal(false)
           }}
+          deleteNote={deleteNote}
         />
       )}
     </div>

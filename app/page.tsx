@@ -48,6 +48,10 @@ export default function Home() {
     setForm(formInitialValues)
   }
 
+  const deleteNote = (id: NoteInterface["id"]) => {
+    setNotes((prev) => prev.filter((note) => note.id !== id))
+  }
+
   return (
     <main>
       <NewNote
@@ -63,6 +67,7 @@ export default function Home() {
               key={note.id}
               note={note}
               updateNote={(updatedNote) => updateNote(note.id)(updatedNote)}
+              deleteNote={deleteNote}
             />
           ))}
       </div>
