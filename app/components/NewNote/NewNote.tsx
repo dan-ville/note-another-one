@@ -1,5 +1,5 @@
 "use client"
-import React from "react"
+import React, { useRef } from "react"
 import styles from "./NewNote.module.scss"
 
 interface Props {
@@ -18,6 +18,15 @@ const NewNote = ({
   onInputChange,
   createNote,
 }: Props) => {
+  const titleRef = useRef<HTMLInputElement>(null)
+  const focusTitle = () => {
+    titleRef?.current?.focus()
+  }
+
+  const onSave = () => {
+    createNote()
+    focusTitle()
+  }
   return (
     <div className={styles["note-container"]}>
       <input
@@ -27,6 +36,7 @@ const NewNote = ({
         name="title"
         value={title}
         onChange={onInputChange}
+        ref={titleRef}
       />
       <textarea
         className={styles["note-content"]}
@@ -37,7 +47,10 @@ const NewNote = ({
         placeholder="Note..."
       />
       <div className={styles["note-footer"]}>
-        <button onClick={() => createNote()} className="save-button">
+        <button
+          onClick={onSave}
+          className="save-button"
+        >
           Save
         </button>
       </div>
