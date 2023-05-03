@@ -1,6 +1,7 @@
 export interface Note {
-  id: string
+  _id: string
   title?: string
   content?: string
-  timeCreated: number
+  createdAt: string
+  updatedAt: string
 }

@@ -25,4 +25,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fit, 250px);
   gap: 1rem;
+  margin: auto;
+  justify-content: center;
+  max-width: 1200px;
 }

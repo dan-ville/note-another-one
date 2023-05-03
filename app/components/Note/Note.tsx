@@ -9,7 +9,7 @@ interface NoteModalProps {
   updateNote: (updatedNote: NoteInterface) => void
   noteRef: React.RefObject<HTMLDivElement>
   modalRef: React.RefObject<HTMLDivElement>
-  deleteNote: (id: NoteInterface["id"]) => void
+  deleteNote: (id: NoteInterface["_id"]) => void
 }
 
 const NoteModal: React.FC<NoteModalProps> = ({
@@ -19,22 +19,24 @@ const NoteModal: React.FC<NoteModalProps> = ({
   modalRef,
   deleteNote,
 }) => {
-  const [updatedNote, setUpdatedNote] = useState<NoteInterface>(note)
-
-  useEffect(() => {
-    setUpdatedNote(note)
-  }, [note])
+  const [fields, setFields] = useState<NoteInterface>(note)
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setUpdatedNote({
-      ...updatedNote,
+    setFields({
+      ...fields,
       [event.target.name]: event.target.value,
     })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const res = await fetch(`http://localhost:8080/notes/${note._id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: fields.title, content: fields.content }),
+    })
+    const updatedNote: NoteInterface = await res.json()
     updateNote(updatedNote)
     // re-apply focus to the note
     if (noteRef.current) {
@@ -49,17 +51,17 @@ const NoteModal: React.FC<NoteModalProps> = ({
           type="text"
           name="title"
           className={styles["title-input"]}
-          value={updatedNote.title}
+          value={fields.title}
           onChange={handleInputChange}
         />
         <textarea
           name="content"
           className={styles["content-input"]}
-          value={updatedNote.content}
+          value={fields.content}
           onChange={handleInputChange}
         />
         <div className={styles["actions-container"]}>
-          <button onClick={() => deleteNote(note.id)}>Delete</button>
+          <button onClick={() => deleteNote(note._id)}>Delete</button>
           <button onClick={handleSubmit}>Save</button>
         </div>
       </div>
@@ -69,11 +71,11 @@ const NoteModal: React.FC<NoteModalProps> = ({
 
 interface NoteProps {
   note: NoteInterface
-  updateNote: (updatedNote: NoteInterface) => void
-  deleteNote: (id: NoteInterface["id"]) => void
+  setNotes: React.Dispatch<React.SetStateAction<NoteInterface[]>>
 }
 
-const Note: React.FC<NoteProps> = ({ note, updateNote, deleteNote }) => {
+const Note: React.FC<NoteProps> = ({ note, setNotes }) => {
+  const [values, setValues] = useState(note)
   const [showModal, setShowModal] = useState(false)
   const noteRef = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -102,6 +104,15 @@ const Note: React.FC<NoteProps> = ({ note, updateNote, deleteNote }) => {
 
   useOnClickOutside(modalRef, closeModal)
 
+  const deleteNote = async (id: string) => {
+    closeModal()
+    await fetch(`http://localhost:8080/notes/${note._id}`, {
+      method: "DELETE",
+    })
+    console.log("note deleted")
+    setNotes(notes => notes.filter(note => id !== note._id))
+  }
+
   return (
     <div>
       <div
@@ -113,8 +124,8 @@ const Note: React.FC<NoteProps> = ({ note, updateNote, deleteNote }) => {
         role="button"
         aria-pressed={showModal}
       >
-        <h3 className={styles["title-input"]}>{note.title}</h3>
-        <p className={styles["content-input"]}>{note.content}</p>
+        <h3 className={styles["title-input"]}>{values.title}</h3>
+        <p className={styles["content-input"]}>{values.content}</p>
       </div>
       {showModal && (
         <NoteModal
@@ -122,10 +133,10 @@ const Note: React.FC<NoteProps> = ({ note, updateNote, deleteNote }) => {
           noteRef={noteRef}
           modalRef={modalRef}
           updateNote={(updatedNote) => {
-            updateNote(updatedNote)
+            setValues(updatedNote)
             setShowModal(false)
           }}
-          deleteNote={deleteNote}
+          deleteNote={() => deleteNote(note._id)}
         />
       )}
     </div>
