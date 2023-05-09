@@ -3,6 +3,7 @@ import { Note as NoteInterface } from "@/app/types"
 import React, { Suspense, useState } from "react"
 import Note from "../Note/Note"
 import NewNote from "../NewNote/NewNote"
+import styles from './NotesGrid.module.scss'
 
 interface Props {
   notes: NoteInterface[]
@@ -13,7 +14,7 @@ const NotesGrid = ({ notes: serverNotes }: Props) => {
   return (
     <Suspense>
       <NewNote setNotes={setNotes} />
-      <div className="notes-grid">
+      <div className={styles["notes-grid"]}>
         {notes
           .sort(
             (a, b) =>

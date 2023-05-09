@@ -1,0 +1,36 @@
+.notes-grid {
+  display: flex;
+  flex-flow: column wrap;
+  align-content: space-between;
+  /* Your container needs a fixed height, and it 
+   * needs to be taller than your tallest column. */
+  height: 900px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.notes-grid > div {
+  max-width: 32%;
+  margin-bottom: 2%; /* Optional */
+  max-height: 600px;
+}
+
+/* Re-order items into rows */
+.notes-grid > div:nth-child(3n + 1) {
+  order: 1;
+}
+.notes-grid > div:nth-child(3n + 2) {
+  order: 2;
+}
+.notes-grid > div:nth-child(3n) {
+  order: 3;
+}
+
+/* Force new columns */
+.notes-grid::before,
+.notes-grid::after {
+  content: "";
+  flex-basis: 100%;
+  width: 0;
+  order: 2;
+}
