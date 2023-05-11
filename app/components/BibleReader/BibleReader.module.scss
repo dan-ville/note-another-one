@@ -1,0 +1,22 @@
+.bible-reader {
+  max-width: 75ch;
+  margin: 0 auto;
+  background-color: hsl(0, 0, 20%);
+  padding: 2rem;
+  border-radius: 1em;
+}
+
+.chapter,
+.heading,
+.passage {
+  margin-bottom: 1rem;
+}
+
+.chapter {
+  text-align: center;
+}
+
+.passage {
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}

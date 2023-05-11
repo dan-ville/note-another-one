@@ -12,11 +12,6 @@ export default async function Home() {
   return (
     <Suspense>
       <main>
-        {/* <NewNote
-        values={form}
-        createNote={createNote}
-        onInputChange={onInputChange}
-      /> */}
         <NotesGrid notes={notes} />
       </main>
     </Suspense>
